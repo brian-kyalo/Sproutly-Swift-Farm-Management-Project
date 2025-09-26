@@ -1,24 +1,24 @@
+////
+////  ContentView.swift
+////  Sprout
+////
+////  Created by Student1 on 24/09/2025.
+////
 //
-//  ContentView.swift
-//  Sprout
+//import SwiftUI
 //
-//  Created by Student1 on 24/09/2025.
+//struct ContentView: View {
+//    var body: some View {
+//        VStack {
+//            Image(systemName: "globe")
+//                .imageScale(.large)
+//                .foregroundStyle(.tint)
+//            Text("Hello, world!")
+//        }
+//        .padding()
+//    }
+//}
 //
-
-import SwiftUI
-
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
-
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}
