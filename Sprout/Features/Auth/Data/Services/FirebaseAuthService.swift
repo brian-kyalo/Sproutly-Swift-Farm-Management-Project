@@ -1,85 +1,69 @@
-//
-//  FirebaseAuthService.swift
-//  Sprout
-//
-//  Created by Student1 on 26/09/2025.
-//
-
+import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-//
-class FirebaseAuthService{
-    // Registration
-    func signUp(email: String, password: String, name: String, completion: @escaping (Result<String, Error>) -> Void) {
-        Auth.auth().createUser(withEmail: email, password: password) {
-            result, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            //
-            guard let uid = result?.user.uid else {
-                completion(.failure(NSError(domain: "AuthError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Unable to get User ID"])))
-                return
-            }
-            //
-            Firestore.firestore().collection("users").document(uid).setData([
-                "name": name,
-                "email": email
-            ]) {error in
+final class FirebaseAuthService {
+    // Register
+    func signUp(email: String, password: String, name: String) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let error = error {
-                    completion(.failure(error))
-                    
-                    
-                }else {
-                    completion(.success(uid))
+                    continuation.resume(throwing: error); return
+                }
+                guard let uid = authResult?.user.uid else {
+                    continuation.resume(throwing: NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Missing UID"]))
+                    return
+                }
+                // Save profile document
+                let data: [String: Any] = ["name": name, "email": email]
+                Firestore.firestore().collection("users").document(uid).setData(data) { err in
+                    if let err = err { continuation.resume(throwing: err) } else { continuation.resume(returning: uid) }
                 }
             }
         }
     }
-    
-    // Login
-    func signIn(email: String, password:String, completion: @escaping (Result<Void, Error>) -> Void) {
-        //
-        Auth.auth().signIn(withEmail: email, password: password){_, error in
-            if let error = error {
-                completion(.failure(error))
-            }else{
-                completion(.success(()))
+
+    /// SIGN IN -> Void
+    func signIn(email: String, password: String) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            Auth.auth().signIn(withEmail: email, password: password) { _, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: ())
+                }
             }
         }
     }
-    
-    //Logout
+
+    // Sign out (synchronous API)
     func signOut() throws {
         try Auth.auth().signOut()
     }
-    
-    // Forgot Password
-    func forgotPassword(email: String, completion: @escaping (Result<Void, Error>)-> Void) {
-        Auth.auth().sendPasswordReset(withEmail: email) {
-            error in if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+
+    // FORGOT -> Void
+        func forgotPassword(email: String) async throws {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Auth.auth().sendPasswordReset(withEmail: email) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: ())
+                    }
+                }
+            }
+        }
+
+    //
+    func fetchUserDocument(uid: String) async throws -> AppUser? {
+        try await withCheckedThrowingContinuation { continuation in
+            Firestore.firestore().collection("users").document(uid).getDocument { snapshot, error in
+                if let error = error { continuation.resume(throwing: error); return }
+                guard let data = snapshot?.data() else { continuation.resume(returning: nil); return }
+                let name = data["name"] as? String ?? ""
+                let email = data["email"] as? String ?? ""
+                continuation.resume(returning: AppUser(id: uid, name: name, email: email))
             }
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
