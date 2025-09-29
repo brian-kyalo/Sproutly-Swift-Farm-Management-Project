@@ -1,75 +1,40 @@
-//
-//  AuthRepository.swift
-//  Sprout
-//
-//  Created by Student1 on 26/09/2025.
-//
-
 import Foundation
 
-//
 protocol AuthRepository {
-    //
-    func signUp(email: String, password: String, name: String) async
-    throws -> String
+    func signUp(email: String, password: String, name: String) async throws -> String
     func signIn(email: String, password: String) async throws
     func signOut() async throws
     func forgotPassword(email: String) async throws
+    func fetchUser(uid: String) async throws -> AppUser?
 }
 
-//
-class DefaultAuthRepository: AuthRepository {
-    //
-    private let authService = FirebaseAuthService()
-    
-    //
+final class DefaultAuthRepository: AuthRepository {
+    private let service = FirebaseAuthService()
+
     func signUp(email: String, password: String, name: String) async throws -> String {
-        //
-        return try await withCheckedThrowingContinuation {continuation in authService.signUp(email: email, password: password, name: name) {result in switch result {
-        case .success(let uid):
-            continuation.resume(returning: uid)
-        case .failure(let error):
-            continuation.resume(throwing: error)
-        }
-     }
-  }
-}
-    
-    //
+        try await service.signUp(email: email, password: password, name: name)
+    }
+
     func signIn(email: String, password: String) async throws {
-        return try await withCheckedThrowingContinuation {
-            continuation in authService.signIn(email: email, password: password) {
-                result in
-                switch result {
-                case .success:
-                    continuation.resume()
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+        try await service.signIn(email: email, password: password)
     }
-    
-    //
+
     func signOut() async throws {
-        try authService.signOut()
-    }
-    
-    //
-    func forgotPassword(email: String) async throws {
-        return try await withCheckedThrowingContinuation{continuation in authService.forgotPassword(email: email){result in
-            switch result {
-            case .success:
+        try await withCheckedThrowingContinuation { continuation in
+            do {
+                try service.signOut()
                 continuation.resume()
-            case .failure(let error):
+            } catch {
                 continuation.resume(throwing: error)
             }
         }
     }
-}
-        
-    
-    
-}
-    
 
+    func forgotPassword(email: String) async throws {
+        try await service.forgotPassword(email: email)
+    }
+
+    func fetchUser(uid: String) async throws -> AppUser? {
+        try await service.fetchUserDocument(uid: uid)
+    }
+}
