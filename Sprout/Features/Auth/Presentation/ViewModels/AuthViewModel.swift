@@ -1,13 +1,21 @@
+// Features/Auth/Presentation/AuthViewModel.swift
 import Foundation
 import FirebaseAuth
 
 @MainActor
 final class AuthViewModel: ObservableObject {
-    @Published var currentUser: AppUser?
+    //
+    @Published var authState: AuthState = .unknown
     @Published var errorMessage: String?
 
     private let useCases: AuthUseCases
     private var handle: AuthStateDidChangeListenerHandle?
+
+    enum AuthState: Equatable {
+        case unknown
+        case authenticated(AppUser)
+        case unauthenticated
+    }
 
     init(useCases: AuthUseCases) {
         self.useCases = useCases
@@ -27,18 +35,14 @@ final class AuthViewModel: ObservableObject {
                 if let fbUser = firebaseUser {
                     // try to fetch fuller profile from Firestore
                     do {
-                        if let appUser = try await self.useCases.fetchUser(uid: fbUser.uid) {
-                            self.currentUser = appUser
-                        } else {
-                            // fallback to minimal user
-                            self.currentUser = AppUser(id: fbUser.uid, name: fbUser.displayName ?? "", email: fbUser.email ?? "")
-                        }
+                        let appUser = try await self.useCases.fetchUser(uid: fbUser.uid) ?? AppUser(id: fbUser.uid, name: fbUser.displayName ?? "", email: fbUser.email ?? "")
+                        self.authState = .authenticated(appUser)
                     } catch {
-                        // don't block UI; set minimal user
-                        self.currentUser = AppUser(id: fbUser.uid, name: fbUser.displayName ?? "", email: fbUser.email ?? "")
+                        // fallback to minimal user
+                        self.authState = .authenticated(AppUser(id: fbUser.uid, name: fbUser.displayName ?? "", email: fbUser.email ?? ""))
                     }
                 } else {
-                    self.currentUser = nil
+                    self.authState = .unauthenticated
                 }
             }
         }
@@ -49,7 +53,6 @@ final class AuthViewModel: ObservableObject {
         do {
             _ = try await useCases.signUp(email: email, password: password, name: name)
             errorMessage = nil
-            
         } catch {
             errorMessage = error.localizedDescription
         }

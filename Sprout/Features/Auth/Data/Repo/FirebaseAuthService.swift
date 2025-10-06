@@ -23,7 +23,7 @@ final class FirebaseAuthService {
         }
     }
 
-    /// SIGN IN -> Void
+    // Login
     func signIn(email: String, password: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             Auth.auth().signIn(withEmail: email, password: password) { _, error in
@@ -36,7 +36,7 @@ final class FirebaseAuthService {
         }
     }
 
-    // Sign out (synchronous API)
+    // Sign out (synchronous)
     func signOut() throws {
         try Auth.auth().signOut()
     }

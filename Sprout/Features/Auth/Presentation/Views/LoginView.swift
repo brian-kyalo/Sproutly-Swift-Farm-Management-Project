@@ -7,6 +7,7 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var isLoading = false
+    @State private var showForgotPassSheet = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -47,13 +48,7 @@ struct LoginView: View {
 
                 //
                 Button("Forgot Password") {
-                    Task {
-                        if !email.isEmpty {
-                            await authViewModel.forgotPassword(email: email)
-                        } else {
-                            authViewModel.errorMessage = "Enter your email to reset password"
-                        }
-                    }
+                    showForgotPassSheet = true
                 }
                 .font(.footnote)
                 .foregroundColor(.blue)
@@ -111,10 +106,18 @@ struct LoginView: View {
         }
         .padding()
         .navigationBarBackButtonHidden(true)
-        .onReceive(authViewModel.$currentUser) { user in
-            if user != nil {
+        .onChange(of: authViewModel.authState) {
+            //
+            if case .authenticated = authViewModel.authState {
                 path.removeLast(path.count)
             }
         }
+        .sheet(isPresented: $showForgotPassSheet) {
+            ForgotPasswordView(authViewModel: authViewModel)
+                .onAppear {
+                    print("Forgot Password view Presented")
+                }
+        }
+        
     }
 }

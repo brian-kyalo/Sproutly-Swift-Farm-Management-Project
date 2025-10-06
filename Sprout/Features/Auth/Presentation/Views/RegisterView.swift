@@ -149,8 +149,8 @@ struct RegisterView: View {
         }
         .padding()
         .navigationBarBackButtonHidden(true)
-        .onReceive(authViewModel.$currentUser) { user in
-            if user != nil {
+        .onChange(of: authViewModel.authState) {
+            if case .authenticated = authViewModel.authState {
                 path.removeLast(path.count)
             }
         }
