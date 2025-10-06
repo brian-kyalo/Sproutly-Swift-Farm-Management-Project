@@ -6,19 +6,20 @@ struct SproutApp: App {
     @StateObject private var authViewModel: AuthViewModel
 
     init() {
+        //
         FirebaseApp.configure()
 
         // single repository + service
         let authRepository = DefaultAuthRepository()
-        let useCases = AuthUseCases(repository: authRepository)
+        let authUseCases = AuthUseCases(repository: authRepository)
 
-        _authViewModel = StateObject(wrappedValue: AuthViewModel(useCases: useCases))
+        _authViewModel = StateObject(wrappedValue: AuthViewModel(useCases: authUseCases))
     }
 
     var body: some Scene {
         WindowGroup {
             AppNavigation()
-                .environmentObject(authViewModel) // provide environment object for entire app
+                .environmentObject(authViewModel) // Provides env object for the entire app.
         }
     }
 }

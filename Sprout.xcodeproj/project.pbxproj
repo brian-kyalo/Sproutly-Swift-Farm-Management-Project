@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E780571D2E8D417300ADD8B0 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E780571C2E8D417300ADD8B0 /* FirebaseStorage */; };
 		E797B5052E8AD863008D1DCB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E797B5042E8AD863008D1DCB /* Kingfisher */; };
 		E7CE84C22E8436F900CE7C03 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E7CE84C12E8436F900CE7C03 /* FirebaseAuth */; };
 		E7CE84C42E8436F900CE7C03 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = E7CE84C32E8436F900CE7C03 /* FirebaseCore */; };
@@ -33,6 +34,7 @@
 				E797B5052E8AD863008D1DCB /* Kingfisher in Frameworks */,
 				E7CE84C42E8436F900CE7C03 /* FirebaseCore in Frameworks */,
 				E7CE84C22E8436F900CE7C03 /* FirebaseAuth in Frameworks */,
+				E780571D2E8D417300ADD8B0 /* FirebaseStorage in Frameworks */,
 				E7CE84C62E8436F900CE7C03 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,6 +82,7 @@
 				E7CE84C32E8436F900CE7C03 /* FirebaseCore */,
 				E7CE84C52E8436F900CE7C03 /* FirebaseFirestore */,
 				E797B5042E8AD863008D1DCB /* Kingfisher */,
+				E780571C2E8D417300ADD8B0 /* FirebaseStorage */,
 			);
 			productName = Sprout;
 			productReference = E7FAF5662E83F4CB00B9A73D /* Sprout.app */;
@@ -362,6 +365,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E780571C2E8D417300ADD8B0 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7CE84C02E8436F900CE7C03 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		E797B5042E8AD863008D1DCB /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E797B5032E8AD863008D1DCB /* XCRemoteSwiftPackageReference "Kingfisher" */;
