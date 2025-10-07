@@ -1,37 +1,40 @@
 import SwiftUI
 
 struct AppNavigation: View {
-    // MARK: - Properties
+    //
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var path = NavigationPath()
     @State private var isSidebarPresented = false
     @AppStorage("hasSeenIntro") private var hasSeenIntro = false
 
-    // MARK: - Auth-based View Logic
+    //
     @ViewBuilder
     var navigationContent: some View {
         switch authViewModel.authState {
+        //
         case .unknown:
             VStack {
                 ProgressView()
                 Text("Loading...")
             }
-
+            
+        //
         case .authenticated:
             TabView {
-                // MARK: - Home Tab
+                //
                 HomeView()
                     .tabItem { Label("Home", systemImage: "house") }
 
-                // MARK: - Stats Tab
+                //
                 StatsView()
                     .tabItem { Label("Stats", systemImage: "chart.bar") }
 
-                // MARK: - News Tab
+                //
                 NewsView()
                     .tabItem { Label("News", systemImage: "newspaper") }
             }
-            // MARK: - Navigation Bar + Sidebar
+            
+            //
             .navigationTitle("Kilimo Gold")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -48,7 +51,8 @@ struct AppNavigation: View {
                 SidebarView(isPresented: $isSidebarPresented)
                     .environmentObject(authViewModel)
             }
-
+            
+        //
         case .unauthenticated:
             if !hasSeenIntro {
                 IntroView(path: $path, hasSeenIntro: $hasSeenIntro)
@@ -57,8 +61,9 @@ struct AppNavigation: View {
             }
         }
     }
-
-    // MARK: - Main Body
+    
+    
+    //
     var body: some View {
         NavigationStack(path: $path) {
             navigationContent
@@ -68,6 +73,11 @@ struct AppNavigation: View {
                         LoginView(path: $path)
                     case "register":
                         RegisterView(path: $path)
+                        
+                    case "tasks":
+                        TasksView()
+                    case "inventory":
+                        InventoryView()
                     default:
                         EmptyView()
                     }
@@ -76,14 +86,13 @@ struct AppNavigation: View {
     }
 }
 
-// MARK: - Sidebar View
+//
 struct SidebarView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var isPresented: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            // MARK: - Header
             HStack {
                 Text("Menu")
                     .font(.title)
@@ -97,7 +106,6 @@ struct SidebarView: View {
             .padding(.horizontal)
             .padding(.top)
 
-            // MARK: - Logout Button
             Button(action: {
                 Task {
                     await authViewModel.signOut()
