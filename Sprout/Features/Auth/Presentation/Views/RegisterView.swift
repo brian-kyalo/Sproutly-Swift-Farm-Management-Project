@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct RegisterView: View {
+    //
+    @Environment(\.colorScheme) var colorScheme
+    var isDark: Bool { colorScheme == .dark }
+    //
     @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var path: NavigationPath
     
@@ -125,14 +129,14 @@ struct RegisterView: View {
                         .frame(height: 50)
                 } else { Text("Sign Up")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(isDark ? .black : .white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                 }
             }
             .background(email.isEmpty || password.isEmpty || confirmPassword.isEmpty || password != confirmPassword
                         ? Color.gray
-                        : Color.blue)
+                        : isDark ? .white : .black)
                         .cornerRadius(12)
                         .disabled(email.isEmpty || password.isEmpty || confirmPassword.isEmpty || password != confirmPassword)
             

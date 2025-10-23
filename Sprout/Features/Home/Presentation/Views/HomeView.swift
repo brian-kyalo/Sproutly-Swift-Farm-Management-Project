@@ -13,17 +13,24 @@ struct HomeView: View {
         useCases: ProjectUseCases(repository: DefaultProjectRepository())
     )
     
+    @Environment(\.colorScheme) var colorScheme
+    var isDark: Bool {colorScheme == .dark}
+    
     @State private var showAddSheet = false
     @State private var showAmounts = false
     
     var body: some View {
         if case .authenticated(let user) = authViewModel.authState {
-            List {
-                totalsSection
-                iconsSection
-                projectsSection
+            
+            //
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    totalsSection
+                    iconsSection
+                    projectsSection
+                }
+                .padding()
             }
-            .listStyle(.plain)
             .navigationTitle("Home")
             .onAppear {
                 viewModel.setupListeners(userId: user.id)
@@ -34,8 +41,9 @@ struct HomeView: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
+                        .frame(width: 45, height: 45)
+                        .foregroundColor(isDark ? .white : .black)
+                        .opacity(0.7)
                         .shadow(radius: 4)
                 }
                 .padding(20)
@@ -51,64 +59,105 @@ struct HomeView: View {
         }
     }
     
+    private func formattedAmount(_ amount: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = ","
+        return "Ksh \(formatter.string(from: NSNumber(value: amount)) ?? "0")"
+    }
+    
     private var totalsSection: some View {
-        Section(header: Text("Totals")) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
+                Text("Total: ")
+                    .font(.headline)
                 
-                
-
-                
-                Text("Total Expense:")
-                Text(showAmounts ? String(format: "%.2f", viewModel.totalExpense) : "******")
-                Spacer()
+                //
                 Button {
                     showAmounts.toggle()
                 } label: {
                     Image(systemName: showAmounts ? "eye" : "eye.slash")
+                        .foregroundColor(isDark ? .white : .black)
                 }
-                
-                
+                Spacer()
             }
-            
-            HStack {
-                Text("Total Income:")
-                Text(showAmounts ? String(format: "%.2f", viewModel.totalIncome) : "******")
-                Spacer()
-                Button {
-                    showAmounts.toggle()
-                } label: {
-                    Image(systemName: showAmounts ? "eye" : "eye.slash")
+            HStack(spacing: 10) {
+                VStack(spacing: 5) {
+                    Text("Expense")
+                        .font(.subheadline)
+                        .foregroundColor(.red)
+                    Text(showAmounts ? formattedAmount(viewModel.totalExpense) : "******")
+                        .font(.title3)
+                        .foregroundColor(.red)
                 }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.red.opacity(0.1))
+                .cornerRadius(10)
+                
+                VStack(spacing: 5) {
+                    Text("Income")
+                        .font(.subheadline)
+                        .foregroundColor(.green)
+                    Text(showAmounts ? formattedAmount(viewModel.totalIncome) : "******")
+                        .font(.title3)
+                        .foregroundColor(.green)
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(10)
             }
         }
     }
     
-    //
     private var iconsSection: some View {
-        Section() {
-            HStack {
-                Spacer()
+        HStack(spacing: 20) {
+            Spacer()
+            
+           
+                
+                //
                 NavigationLink(value: "tasks") {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 50, height: 50)
-                        .overlay(Image(systemName: "list.bullet").foregroundColor(.white))
+                    VStack(spacing: 5) {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 50, height: 50)
+                            .overlay(Image(systemName: "list.bullet").foregroundColor(isDark ? .white : .black))
+                        Text("Tasks")
+                            .font(.caption)
+                            .foregroundColor(isDark ? .white : .black)
+                        
+                    }
                 }
-                Spacer()
+            
+            
+            Spacer()
+            
+                //
                 NavigationLink(value: "inventory") {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 50, height: 50)
-                        .overlay(Image(systemName: "archivebox").foregroundColor(.white))
+                    //
+                    VStack(spacing: 5){
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 50, height: 50)
+                            .overlay(Image(systemName: "archivebox").foregroundColor(isDark ? .white : .black))
+                        Text("Inventory")
+                            .font(.caption)
+                            .foregroundColor(isDark ? .white : .black)
+                    }
+                    
                 }
-                Spacer()
-            }
+
+            
+            Spacer()
         }
     }
     
-    //
     private var projectsSection: some View {
-        Section(header: Text("Projects")) {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Projects")
+                .font(.headline)
             ForEach(viewModel.projects) { project in
                 NavigationLink(destination: ProjectDetailView(project: project)) {
                     ProjectCard(project: project)
@@ -116,6 +165,4 @@ struct HomeView: View {
             }
         }
     }
-    
-   
 }

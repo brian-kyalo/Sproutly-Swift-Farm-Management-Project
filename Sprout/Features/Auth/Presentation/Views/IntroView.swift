@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct IntroView: View {
+    //
+    @Environment(\.colorScheme) var colorScheme
+    var isDark: Bool { colorScheme == .dark }
+    //
     @Binding var path: NavigationPath
     @Binding var hasSeenIntro: Bool
 
@@ -23,12 +27,16 @@ struct IntroView: View {
                 path.append("login")
             }
             .buttonStyle(.borderedProminent)
+            .tint(isDark ? .white : .black)
+            .foregroundColor(isDark ? .white : .black)
 
             Button("Sign Up") {
                 hasSeenIntro = true   // mark intro as seen
                 path.append("register")
             }
             .buttonStyle(.bordered)
+            .tint(isDark ? .white : .black)
+            .foregroundColor(isDark ? .white : .black)
 
             Spacer()
         }
