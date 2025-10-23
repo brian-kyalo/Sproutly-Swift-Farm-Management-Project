@@ -1,6 +1,10 @@
 import SwiftUI
 
 struct LoginView: View {
+    //
+    @Environment(\.colorScheme) var colorScheme
+    var isDark: Bool { colorScheme == .dark }
+    //
     @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var path: NavigationPath
 
@@ -81,12 +85,12 @@ struct LoginView: View {
                     
                 } else { Text("Sign In")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(isDark ? .black : .white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                 }
             }
-            .background(email.isEmpty || password.isEmpty ? Color.gray : Color.blue)
+            .background(email.isEmpty || password.isEmpty ? Color.gray : isDark ? .white: .black)
                         .cornerRadius(12)
                         .disabled(email.isEmpty || password.isEmpty)
 
@@ -95,7 +99,6 @@ struct LoginView: View {
             // Sign Up Link.
             HStack {
                 Text("Don’t have an account ?")
-                    .foregroundColor(.gray)
                 Button("Sign Up") {
                     path.append("register")
                 }

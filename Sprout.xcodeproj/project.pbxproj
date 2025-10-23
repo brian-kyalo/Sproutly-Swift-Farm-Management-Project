@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E746A5812E9FE1A90012AB7B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = E746A5802E9FE1A90012AB7B /* GoogleSignIn */; };
+		E746A5832E9FE1A90012AB7B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E746A5822E9FE1A90012AB7B /* GoogleSignInSwift */; };
 		E780571D2E8D417300ADD8B0 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E780571C2E8D417300ADD8B0 /* FirebaseStorage */; };
 		E797B5052E8AD863008D1DCB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E797B5042E8AD863008D1DCB /* Kingfisher */; };
 		E7CE84C22E8436F900CE7C03 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E7CE84C12E8436F900CE7C03 /* FirebaseAuth */; };
@@ -33,9 +35,11 @@
 			files = (
 				E797B5052E8AD863008D1DCB /* Kingfisher in Frameworks */,
 				E7CE84C42E8436F900CE7C03 /* FirebaseCore in Frameworks */,
+				E746A5832E9FE1A90012AB7B /* GoogleSignInSwift in Frameworks */,
 				E7CE84C22E8436F900CE7C03 /* FirebaseAuth in Frameworks */,
 				E780571D2E8D417300ADD8B0 /* FirebaseStorage in Frameworks */,
 				E7CE84C62E8436F900CE7C03 /* FirebaseFirestore in Frameworks */,
+				E746A5812E9FE1A90012AB7B /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +87,8 @@
 				E7CE84C52E8436F900CE7C03 /* FirebaseFirestore */,
 				E797B5042E8AD863008D1DCB /* Kingfisher */,
 				E780571C2E8D417300ADD8B0 /* FirebaseStorage */,
+				E746A5802E9FE1A90012AB7B /* GoogleSignIn */,
+				E746A5822E9FE1A90012AB7B /* GoogleSignInSwift */,
 			);
 			productName = Sprout;
 			productReference = E7FAF5662E83F4CB00B9A73D /* Sprout.app */;
@@ -115,6 +121,7 @@
 			packageReferences = (
 				E7CE84C02E8436F900CE7C03 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E797B5032E8AD863008D1DCB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				E746A57F2E9FE1A90012AB7B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E7FAF5672E83F4CB00B9A73D /* Products */;
@@ -286,6 +293,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.brian-kyalo.Sprout";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -314,6 +322,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				"OTHER_LDFLAGS[arch=*]" = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.brian-kyalo.Sprout";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -346,6 +355,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E746A57F2E9FE1A90012AB7B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		E797B5032E8AD863008D1DCB /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -365,6 +382,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E746A5802E9FE1A90012AB7B /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E746A57F2E9FE1A90012AB7B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		E746A5822E9FE1A90012AB7B /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E746A57F2E9FE1A90012AB7B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		E780571C2E8D417300ADD8B0 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E7CE84C02E8436F900CE7C03 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
